@@ -74,4 +74,4 @@ def optimize_replacement_time(results_dic, Q_data, K_data, weights,
     idx_max = np.argmax(function_values)
     cycle_max = utility_cycles[idx_max]
     
-    return cycle_max
+    return cycle_max, function_values

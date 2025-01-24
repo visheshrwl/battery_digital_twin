@@ -158,43 +158,35 @@ if st.sidebar.button("Run Particle Filter"):
 
 
 # Optimization Section
-if 'results_dic' in st.session_state:
-    if st.sidebar.button("Optimize Replacement Time"):
-        with st.spinner("Optimizing Replacement Time..."):
-            results_dic = st.session_state['results_dic']
-            Q_data = st.session_state['Q_test']
-            K_data = st.session_state['K_test']
-            
-            weights = np.array([ah_weight, mtbc_weight])
-            optimal_cycle = optimize_replacement_time(
-                results_dic=results_dic,
-                Q_data=Q_data,
-                K_data=K_data,
-                weights=weights,
-                ah_bounds=(300,1000),
-                mtbc_bounds=(0.210,0.250),
-                eol_threshold=0.50
-            )
-            
-            st.write(f"**Optimal Replacement Cycle:** {int(optimal_cycle)}")
-            
-            # Plot Optimization Results
-            # Here you need to define how to plot 'function_values' and other variables
-            # Assuming 'function_values' is available or returned from optimization
-            # For simplicity, let's plot the utility over cycles
-            
-            # Placeholder for utility_cycles and function_values
-            utility_cycles = np.arange(K_opt_test[cell_idx], int(K_eol)-1, 1)
-            # You need to ensure these variables are calculated and passed appropriately
-            # This part requires further integration based on your original scripts
-            
-            # Example plot (customize as needed)
-            plt.figure(figsize=(6,4))
-            plt.plot(utility_cycles, function_values, label='Utility')
-            plt.axvline(optimal_cycle, color='g', linestyle='--', label='Optimal Replacement')
-            plt.xlabel('Cycle Number')
-            plt.ylabel('Utility')
-            plt.legend()
-            st.pyplot(plt)
-else:
-    st.warning("Please run the Particle Filter before performing optimization.")
+    if 'results_dic' in st.session_state:
+        if st.sidebar.button("Optimize Replacement Time"):
+            with st.spinner("Optimizing Replacement Time..."):
+                results_dic = st.session_state['results_dic']
+                Q_data = st.session_state['Q_test']
+                K_data = st.session_state['K_test']
+                
+                weights = np.array([ah_weight, mtbc_weight])
+                optimal_cycle, function_values = optimize_replacement_time(
+                    results_dic=results_dic,
+                    Q_data=Q_data,
+                    K_data=K_data,
+                    weights=weights,
+                    ah_bounds=(300,1000),
+                    mtbc_bounds=(0.210,0.250),
+                    eol_threshold=0.50
+                )
+                
+                st.write(f"**Optimal Replacement Cycle:** {int(optimal_cycle)}")
+                
+                # Plot Optimization Results
+                utility_cycles = results_dic['cycles']
+                
+                plt.figure(figsize=(6,4))
+                plt.plot(utility_cycles, function_values, label='Utility')
+                plt.axvline(optimal_cycle, color='g', linestyle='--', label='Optimal Replacement')
+                plt.xlabel('Cycle Number')
+                plt.ylabel('Utility')
+                plt.legend()
+                st.pyplot(plt)
+    else:
+        st.warning("Please run the Particle Filter before performing optimization.")

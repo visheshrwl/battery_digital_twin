@@ -140,6 +140,6 @@ def PF(K_data, Q_data, K_fpt, K_eol, idx_fpt, eol_threshold,
         plt.xlabel('Cycle Number')
         plt.ylabel('Discharge Capacity (Ah)')
         plt.legend()
-        st.pyplot(plt)
+
     
     return results_dic
